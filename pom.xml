@@ -127,9 +127,9 @@
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/static/customers.yaml</inputSpec>
 							<generatorName>spring</generatorName>
-							<packageName>com.mydeveloperplanet.myaicodeprojectplanet</packageName>
-							<apiPackage>com.mydeveloperplanet.myaicodeprojectplanet.api</apiPackage>
-							<modelPackage>com.mydeveloperplanet.myaicodeprojectplanet.model</modelPackage>
+							<packageName>com.mydeveloperplanet.myaicodeprojectplanet.openapi</packageName>
+							<apiPackage>com.mydeveloperplanet.myaicodeprojectplanet.openapi.api</apiPackage>
+							<modelPackage>com.mydeveloperplanet.myaicodeprojectplanet.openapi.model</modelPackage>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
 								<useSpringBoot3>true</useSpringBoot3>
