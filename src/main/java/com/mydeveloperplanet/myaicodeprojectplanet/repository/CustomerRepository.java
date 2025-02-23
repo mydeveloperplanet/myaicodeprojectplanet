@@ -36,9 +36,8 @@ public class CustomerRepository {
     }
 
     public CustomersRecord updateCustomer(Long id, CustomersRecord customerDetails) {
-        if (dslContext.selectFrom(Customers.CUSTOMERS)
-                .where(Customers.CUSTOMERS.ID.eq(id))
-                .exists()) {
+        boolean exists = dslContext.fetchExists(dslContext.selectFrom(Customers.CUSTOMERS));
+        if (exists) {
             dslContext.update(Customers.CUSTOMERS)
                     .set(Customers.CUSTOMERS.FIRST_NAME, customerDetails.getFirstName())
                     .set(Customers.CUSTOMERS.LAST_NAME, customerDetails.getLastName())
@@ -52,9 +51,8 @@ public class CustomerRepository {
     }
 
     public void deleteCustomer(Long id) {
-        if (dslContext.selectFrom(Customers.CUSTOMERS)
-                .where(Customers.CUSTOMERS.ID.eq(id))
-                .exists()) {
+        boolean exists = dslContext.fetchExists(dslContext.selectFrom(Customers.CUSTOMERS));
+        if (exists) {
             dslContext.deleteFrom(Customers.CUSTOMERS)
                     .where(Customers.CUSTOMERS.ID.eq(id))
                     .execute();
