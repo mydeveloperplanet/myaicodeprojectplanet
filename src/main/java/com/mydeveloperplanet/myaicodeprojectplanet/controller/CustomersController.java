@@ -2,7 +2,6 @@ package com.mydeveloperplanet.myaicodeprojectplanet.controller;
 
 import com.mydeveloperplanet.myaicodeprojectplanet.model.Customer;
 import com.mydeveloperplanet.myaicodeprojectplanet.openapi.api.CustomersApi;
-import com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer;
 import com.mydeveloperplanet.myaicodeprojectplanet.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,7 @@ public class CustomersController implements CustomersApi {
     @Override
     public ResponseEntity<List<com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer>> customersGet() {
         List<Customer> customers = customerService.getAllCustomers();
-        return new ResponseEntity<>(customers, HttpStatus.OK);
+        return new ResponseEntity<>(convertToOpenAPIModel(customers), HttpStatus.OK);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class CustomersController implements CustomersApi {
     public ResponseEntity<com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer> customersIdGet(@PathVariable Long id) {
         Optional<Customer> customerOptional = customerService.getCustomerById(id);
         if (customerOptional.isPresent()) {
-            return new ResponseEntity<>(customerOptional.get(), HttpStatus.OK);
+            return new ResponseEntity<>(convertToOpenAPIModel(customerOptional.get()), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -53,6 +52,21 @@ public class CustomersController implements CustomersApi {
     public ResponseEntity<Void> customersIdDelete(@PathVariable Long id) {
         customerService.deleteCustomer(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    private List<com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer> convertToOpenAPIModel(List<Customer> domainCustomers) {
+        return domainCustomers.stream()
+                .map(this::convertToOpenAPIModel)
+                .toList();
+    }
+
+    private com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer convertToOpenAPIModel(Customer customer) {
+        com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer openAPICustomer =
+                new com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer();
+        openAPICustomer.setId(customer.getId());
+        openAPICustomer.setFirstName(customer.getFirstName());
+        openAPICustomer.setLastName(customer.getLastName());
+        return openAPICustomer;
     }
 
     private Customer convertToDomainModel(com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer openAPICustomer) {
