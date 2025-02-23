@@ -2,6 +2,7 @@ package com.mydeveloperplanet.myaicodeprojectplanet.repository;
 
 import com.mydeveloperplanet.myaicodeprojectplanet.jooq.tables.Customers;
 import com.mydeveloperplanet.myaicodeprojectplanet.jooq.tables.records.CustomersRecord;
+import com.mydeveloperplanet.myaicodeprojectplanet.model.Customer;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,27 +16,32 @@ public class CustomerRepository {
     @Autowired
     private DSLContext dslContext;
 
-    public List<CustomersRecord> getAllCustomers() {
-        return dslContext.selectFrom(Customers.CUSTOMERS).fetchInto(CustomersRecord.class);
+    public List<Customer> getAllCustomers() {
+        return dslContext.selectFrom(Customers.CUSTOMERS)
+                .fetchInto(CustomersRecord.class)
+                .stream()
+                .map(this::convertToCustomer)
+                .toList();
     }
 
-    public Optional<CustomersRecord> getCustomerById(Long id) {
+    public Optional<Customer> getCustomerById(Long id) {
         return dslContext.selectFrom(Customers.CUSTOMERS)
                 .where(Customers.CUSTOMERS.ID.eq(id))
-                .fetchOptionalInto(CustomersRecord.class);
+                .fetchOptionalInto(CustomersRecord.class)
+                .map(this::convertToCustomer);
     }
 
-    public CustomersRecord createCustomer(CustomersRecord customer) {
-        dslContext.insertInto(Customers.CUSTOMERS, 
-                             Customers.CUSTOMERS.FIRST_NAME, 
-                             Customers.CUSTOMERS.LAST_NAME)
-                 .values(customer.getFirstName(), customer.getLastName())
-                 .returning()
-                 .fetchOne();
-        return customer;
+    public Customer createCustomer(Customer customer) {
+        CustomersRecord customerRecord = dslContext.insertInto(Customers.CUSTOMERS,
+                        Customers.CUSTOMERS.FIRST_NAME,
+                        Customers.CUSTOMERS.LAST_NAME)
+                .values(customer.getFirstName(), customer.getLastName())
+                .returning()
+                .fetchOne();
+        return convertToCustomer(customerRecord);
     }
 
-    public CustomersRecord updateCustomer(Long id, CustomersRecord customerDetails) {
+    public Customer updateCustomer(Long id, Customer customerDetails) {
         boolean exists = dslContext.fetchExists(dslContext.selectFrom(Customers.CUSTOMERS));
         if (exists) {
             dslContext.update(Customers.CUSTOMERS)
@@ -59,5 +65,13 @@ public class CustomerRepository {
         } else {
             throw new RuntimeException("Customer not found");
         }
+    }
+
+    private Customer convertToCustomer(CustomersRecord customerRecord) {
+        return new Customer(
+                customerRecord.getId(),
+                customerRecord.getFirstName(),
+                customerRecord.getLastName()
+        );
     }
 }
