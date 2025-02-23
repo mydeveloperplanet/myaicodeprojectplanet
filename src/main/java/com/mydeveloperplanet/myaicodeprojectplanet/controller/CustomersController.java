@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/customers")
 public class CustomersController implements CustomersApi {
 
     @Autowired
