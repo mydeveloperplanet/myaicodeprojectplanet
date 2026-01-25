@@ -1,7 +1,7 @@
 package com.mydeveloperplanet.myaicodeprojectplanet.controller;
 
 import com.mydeveloperplanet.myaicodeprojectplanet.model.Customer;
-import com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer;
+//import com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer;
 import com.mydeveloperplanet.myaicodeprojectplanet.service.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,20 +31,20 @@ class CustomersControllerTest {
 
     private Customer customer1;
     private Customer customer2;
-    private OpenAPICustomer openAPICustomer1;
-    private OpenAPICustomer openAPICustomer2;
+    private com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer openAPICustomer1;
+    private com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer openAPICustomer2;
 
     @BeforeEach
     void setUp() {
         customer1 = new Customer(1L, "John", "Doe");
         customer2 = new Customer(2L, "Jane", "Smith");
 
-        openAPICustomer1 = new OpenAPICustomer()
+        openAPICustomer1 = new com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer()
                 .id(1L)
                 .firstName("John")
                 .lastName("Doe");
 
-        openAPICustomer2 = new OpenAPICustomer()
+        openAPICustomer2 = new com.mydeveloperplanet.myaicodeprojectplanet.openapi.model.Customer()
                 .id(2L)
                 .firstName("Jane")
                 .lastName("Smith");
